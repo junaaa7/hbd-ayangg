@@ -1,0 +1,1753 @@
+/* ==========================================================================
+   A JOURNEY OF US — css/style.css
+
+   Daftar isi
+   01 Tokens (warna, font, jarak)   09 Gallery
+   02 Base                           10 Lightbox
+   03 Layout helpers                 11 Favorite Moments
+   04 Buttons                        12 Reasons
+   05 Opening                        13 Love Letter
+   06 Floaters & sparkles            14 My Wish For You
+   07 Hero                           15 Night: Cake, Final, Closing
+   08 Birthday message               16 Music, progress, confetti
+                                     17 Scroll reveal
+                                     18 Reduced motion
+                                     19 Mobile optimization
+
+   Ingin ganti warna? Cukup ubah variabel di bagian 01.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   01  TOKENS
+   ========================================================================== */
+:root {
+  /* Warna */
+  --cream:     #fff8f1;
+  --blush:     #fbe4e6;
+  --petal:     #f5bfcb;
+  --rose:      #d4607b;
+  --rose-deep: #b23a5a;
+  --wine:      #4e1a2d;
+  --wine-deep: #33101e;
+  --ink:       #3d2430;
+  --ink-soft:  #7b5866;
+  --gold:      #f6c877;
+
+  /* Tipografi */
+  --font-display: "Fraunces", "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body:    "Nunito Sans", "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+
+  /* Jarak */
+  --gutter: 1.5rem;
+
+  /* Bentuk & kedalaman (bayangan diberi warna rose, bukan abu-abu) */
+  --radius-s: 12px;
+  --radius-m: 20px;
+  --radius-l: 32px;
+  --shadow-soft: 0 18px 40px -18px rgba(150, 50, 85, .35);
+  --shadow-lift: 0 28px 54px -22px rgba(150, 50, 85, .48);
+
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+}
+
+
+/* ==========================================================================
+   02  BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--ink);
+  background: var(--cream);
+  overflow-x: hidden;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Halaman terkunci sampai amplop pembuka diklik, dan saat modal terbuka */
+html.js body:not(.is-opened),
+body.has-modal { overflow: hidden; }
+
+img, video, canvas { display: block; max-width: 100%; }
+
+h1, h2, h3, p, figure, blockquote, ol, ul { margin: 0; }
+ol, ul { padding: 0; list-style: none; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+[hidden] { display: none !important; }
+
+:focus-visible { outline: 3px solid var(--rose); outline-offset: 3px; }
+.night :focus-visible { outline-color: var(--petal); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+
+/* ==========================================================================
+   03  LAYOUT HELPERS
+   ========================================================================== */
+.container        { width: min(100%, 68rem); margin-inline: auto; }
+.container--narrow { width: min(100%, 40rem); }
+
+.section {
+  position: relative;
+  padding: clamp(4.5rem, 14vw, 8rem) var(--gutter);
+}
+
+/* Bagian berlatar blush: tepi atas & bawah memudar ke cream agar tidak ada garis tegas */
+.section--blush {
+  background: linear-gradient(
+    180deg,
+    var(--cream) 0,
+    var(--blush) 7rem,
+    var(--blush) calc(100% - 7rem),
+    var(--cream) 100%
+  );
+}
+
+.section__head {
+  display: grid;
+  justify-items: center;
+  gap: .9rem;
+  margin-bottom: clamp(2.5rem, 8vw, 4rem);
+  text-align: center;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.1rem, 8vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  color: var(--wine);
+  text-wrap: balance;
+}
+
+.section__lead {
+  max-width: 28rem;
+  color: var(--ink-soft);
+  text-wrap: balance;
+}
+
+/* Ornamen kecil: garis – hati – garis */
+.ornament {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: .85rem;
+  line-height: 1;
+  color: var(--rose);
+}
+.ornament::before,
+.ornament::after {
+  content: "";
+  width: 2.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, currentColor);
+}
+.ornament::after { transform: scaleX(-1); }
+
+/* Bingkai foto + placeholder bila gambar belum ada */
+.photo {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(145deg, #fde8ec 0%, var(--petal) 100%);
+}
+.photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.photo.is-missing img { visibility: hidden; }
+.photo.is-missing::before {
+  content: "♥";
+  position: absolute;
+  left: 50%; top: 42%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, .92);
+}
+.photo.is-missing::after {
+  content: attr(data-ph);
+  position: absolute;
+  left: .75rem; right: .75rem;
+  top: calc(42% + 1.7rem);
+  text-align: center;
+  font-size: .7rem;
+  line-height: 1.35;
+  color: var(--rose-deep);
+  overflow-wrap: anywhere;
+  opacity: .85;
+}
+
+/* Bingkai lengkung (arch) — motif utama untuk wajah */
+.arch {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 50% 50% 1.5rem 1.5rem / 40% 40% 1.5rem 1.5rem;
+  box-shadow: 0 0 0 .45rem rgba(255, 255, 255, .8), var(--shadow-soft);
+}
+.arch .photo { position: absolute; inset: 0; }
+
+
+/* ==========================================================================
+   04  BUTTONS
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  min-height: 3rem;
+  padding: .8rem 1.75rem;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .25s var(--ease-out), box-shadow .25s ease, background-color .25s ease, opacity .4s ease;
+}
+
+.btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+  box-shadow: 0 12px 26px -10px rgba(178, 58, 90, .7);
+}
+.btn--ghost {
+  color: var(--rose-deep);
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(212, 96, 123, .35);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.btn--ghost-light {
+  color: var(--cream);
+  background: rgba(255, 255, 255, .08);
+  border: 1px solid rgba(255, 255, 255, .28);
+}
+
+.btn:active { transform: scale(.97); }
+.btn:disabled { opacity: .6; cursor: default; }
+
+@media (hover: hover) {
+  .btn--primary:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -10px rgba(178, 58, 90, .8); }
+  .btn--ghost:hover   { background: #fff; }
+  .btn--ghost-light:hover { background: rgba(255, 255, 255, .16); }
+}
+
+
+/* ==========================================================================
+   05  OPENING
+   ========================================================================== */
+.opening { display: none; }
+
+.js .opening {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: max(1.5rem, env(safe-area-inset-top)) var(--gutter) max(1.5rem, env(safe-area-inset-bottom));
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(70% 55% at 50% 32%, #fff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, var(--cream) 0%, var(--blush) 100%);
+  transition: opacity 1s ease, transform 1.3s var(--ease-out), visibility 0s linear 1.3s;
+}
+
+.js .opening.is-leaving {
+  opacity: 0;
+  transform: scale(1.05);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.opening__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.1rem;
+  max-width: 26rem;
+}
+
+/* Segel lilin merah muda: pembuka "hadiah digital" */
+.opening__seal {
+  display: grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  margin-bottom: .5rem;
+  border-radius: 58% 42% 55% 45% / 48% 56% 44% 52%;
+  font-size: 1.9rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, .92);
+  background: radial-gradient(circle at 32% 28%, #f08aa1 0%, var(--rose) 45%, var(--rose-deep) 100%);
+  box-shadow:
+    inset 0 -4px 8px rgba(78, 26, 45, .35),
+    inset 0 3px 6px rgba(255, 255, 255, .35),
+    0 16px 28px -10px rgba(178, 58, 90, .7);
+  animation:
+    introIn 1.1s var(--ease-out) .1s both,
+    sealPulse 2.8s ease-in-out 1.4s infinite;
+}
+
+.opening__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(3rem, 14vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--wine);
+  animation: introIn 1.2s var(--ease-out) .5s both;
+}
+
+.opening__text {
+  max-width: 19rem;
+  text-wrap: balance;
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  animation: introIn 1.2s var(--ease-out) 1s both;
+}
+
+.opening__button {
+  margin-top: .75rem;
+  animation: introIn 1.2s var(--ease-out) 1.5s both;
+}
+
+@keyframes introIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes sealPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.07); }
+}
+
+
+/* ==========================================================================
+   06  FLOATERS & SPARKLES  (dibuat oleh JavaScript, hanya transform + opacity)
+   ========================================================================== */
+.floaters {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.floater {
+  position: absolute;
+  left: var(--x);
+  bottom: -3rem;
+  font-size: var(--size);
+  line-height: 1;
+  color: var(--petal);
+  opacity: 0;
+  animation: floatUp var(--dur) linear var(--delay) var(--iter, infinite) both;
+  will-change: transform, opacity;
+}
+
+.sparkle {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  font-size: var(--size);
+  line-height: 1;
+  color: var(--gold);
+  opacity: 0;
+  animation: twinkle var(--dur) ease-in-out var(--delay) infinite;
+}
+
+.final .floater { color: var(--rose); }
+
+@keyframes floatUp {
+  0%   { transform: translate3d(0, 0, 0) rotate(-8deg); opacity: 0; }
+  12%  { opacity: .85; }
+  85%  { opacity: .6; }
+  100% { transform: translate3d(var(--drift), -110vh, 0) rotate(18deg); opacity: 0; }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0;  transform: scale(.3) rotate(0deg); }
+  50%      { opacity: .9; transform: scale(1) rotate(45deg); }
+}
+
+/* Percikan sparkle sekali pakai (saat lilin ditiup) */
+.spark {
+  position: fixed;
+  z-index: 85;
+  pointer-events: none;
+  line-height: 1;
+  color: var(--gold);
+  transform: translate(-50%, -50%);
+  animation: sparkOut 1.1s ease-out forwards;
+}
+@keyframes sparkOut {
+  from { opacity: 1; transform: translate(-50%, -50%) scale(.2); }
+  to   { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(90deg); }
+}
+
+
+/* ==========================================================================
+   07  HERO
+   ========================================================================== */
+.hero {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 3.5rem var(--gutter) 5rem;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 40% at 50% 42%, rgba(245, 191, 203, .55), rgba(245, 191, 203, 0) 70%),
+    linear-gradient(180deg, var(--blush) 0%, var(--cream) 100%);
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.15rem;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  /* dibatasi juga oleh tinggi layar agar hero selalu muat dalam satu layar */
+  font-size: clamp(3.2rem, min(15vw, 10vh), 7.5rem);
+  font-size: clamp(3.2rem, min(15vw, 10svh), 7.5rem);
+  line-height: .95;
+  letter-spacing: -.025em;
+  color: var(--wine);
+}
+.hero__title > span { display: block; }
+
+.hero__heart {
+  display: inline-block;
+  font-size: .55em;
+  font-style: normal;
+  vertical-align: .2em;
+  animation: heartbeat 1.8s ease-in-out 3.5s infinite;
+}
+
+.hero__photo {
+  width: min(62vw, 17rem, 27vh);
+  width: min(62vw, 17rem, 27svh);
+  margin: .6rem 0 .4rem;
+}
+
+.hero__name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 7.5vw, 2.9rem);
+  line-height: 1.1;
+  color: var(--rose-deep);
+}
+
+.hero__date {
+  margin-top: -.5rem;
+  font-size: 1rem;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+}
+
+.hero__tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.25rem, 5vw, 1.6rem);
+  color: var(--wine);
+}
+
+/* Isyarat gulir */
+.hero__scroll {
+  position: absolute;
+  left: 50%;
+  bottom: max(1.5rem, env(safe-area-inset-bottom));
+  translate: -50% 0;
+  z-index: 1;
+}
+.hero__scroll span {
+  display: block;
+  width: .9rem;
+  height: .9rem;
+  border-right: 2px solid var(--rose);
+  border-bottom: 2px solid var(--rose);
+  transform: rotate(45deg);
+  animation: bob 2s ease-in-out infinite;
+}
+
+/* Satu momen orkestrasi: foto terbuka perlahan, lalu teks menyusul */
+.js .hero__item { opacity: 0; }
+.is-opened .hero__item {
+  animation: heroIn 1.2s var(--ease-out) var(--d, 0s) forwards;
+}
+
+/* Tirai pembuka foto (hanya transform) */
+.js .hero__photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  background: linear-gradient(180deg, #fff4ee, var(--blush));
+  transform-origin: top;
+}
+.is-opened .hero__photo::after {
+  animation: curtainUp 1.7s var(--ease-out) calc(var(--d) + .25s) forwards;
+}
+.js .hero__photo img { transform: scale(1.18); }
+.is-opened .hero__photo img {
+  animation: settle 2.4s var(--ease-out) var(--d) forwards;
+}
+
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes curtainUp {
+  from { transform: scaleY(1); }
+  to   { transform: scaleY(0); }
+}
+@keyframes settle {
+  from { transform: scale(1.18); }
+  to   { transform: scale(1); }
+}
+@keyframes heartbeat {
+  0%, 60%, 100% { transform: scale(1); }
+  70%           { transform: scale(1.22); }
+  80%           { transform: scale(1); }
+  90%           { transform: scale(1.14); }
+}
+@keyframes bob {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: .5; }
+  50%      { transform: rotate(45deg) translate(4px, 4px); opacity: 1; }
+}
+
+
+/* ==========================================================================
+   08  BIRTHDAY MESSAGE
+   ========================================================================== */
+.message__body {
+  max-width: 34rem;
+  margin-inline: auto;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.2rem, 4.6vw, 1.5rem);
+  line-height: 1.8;
+  color: var(--ink);
+}
+.message__body p + p { margin-top: 1.6rem; }
+
+.message__greeting {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.2em;
+  color: var(--rose-deep);
+}
+.message__sign {
+  font-style: italic;
+  color: var(--rose-deep);
+}
+
+
+/* ==========================================================================
+   09  MEMORY GALLERY  (masonry tanpa library: CSS columns + aspect-ratio)
+   ========================================================================== */
+.gallery {
+  max-width: 68rem;
+  margin-inline: auto;
+  column-count: 2;
+  column-gap: .6rem;
+}
+
+.gallery__item {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0 0 .6rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-m);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  break-inside: avoid;
+  background: var(--petal);
+  box-shadow: var(--shadow-soft);
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+.gallery__item--square    { aspect-ratio: 1 / 1; }
+.gallery__item--landscape { aspect-ratio: 4 / 3; }
+.gallery__item--tall      { aspect-ratio: 2 / 3; }
+
+.gallery__item .photo {
+  position: absolute;
+  inset: 0;
+}
+.gallery__item img { transition: transform .8s var(--ease-out); }
+
+@media (hover: hover) {
+  .gallery__item:hover img { transform: scale(1.06); }
+}
+
+@media (min-width: 40rem) {
+  .gallery { column-count: 3; column-gap: .9rem; }
+  .gallery__item { margin-bottom: .9rem; }
+}
+@media (min-width: 64rem) {
+  .gallery { column-count: 4; }
+}
+
+
+/* ==========================================================================
+   10  LIGHTBOX  (modal foto, memakai <dialog>)
+   ========================================================================== */
+.lightbox {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  color: #fff;
+  background: transparent;
+}
+.lightbox[open] { display: block; animation: fadeIn .3s ease; }
+.lightbox.is-closing { opacity: 0; transition: opacity .22s ease; }
+
+.lightbox::backdrop {
+  background: rgba(40, 12, 24, .8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.lightbox__inner {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 4rem 1rem 1.5rem;
+}
+
+.lightbox__figure {
+  display: grid;
+  justify-items: center;
+  gap: .9rem;
+  max-width: min(100%, 60rem);
+}
+.lightbox[open] .lightbox__figure { animation: zoomIn .4s var(--ease-out); }
+
+.lightbox__img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 11rem);
+  max-height: calc(100svh - 11rem);
+  border-radius: var(--radius-m);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .65);
+}
+
+.lightbox__placeholder {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: .5rem;
+  width: min(80vw, 22rem);
+  aspect-ratio: 4 / 5;
+  max-height: calc(100svh - 11rem);
+  padding: 1rem;
+  text-align: center;
+  border-radius: var(--radius-m);
+  background: linear-gradient(145deg, #fde8ec, var(--petal));
+  color: var(--rose-deep);
+}
+.lightbox__placeholder span  { font-size: 3rem; line-height: 1; color: rgba(255, 255, 255, .95); }
+.lightbox__placeholder small { font-size: .8rem; word-break: break-all; }
+
+.lightbox__caption {
+  max-width: 100%;
+  padding: .55rem 1.2rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  border: 1px solid rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .12);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+.lightbox__caption:has(#lightboxCaption:empty) { display: none; }
+
+.lightbox__count {
+  font-size: .85rem;
+  color: rgba(255, 255, 255, .7);
+  font-variant-numeric: tabular-nums;
+}
+
+.lightbox__btn {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  padding: 0;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .14);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .2s ease, transform .2s ease;
+}
+.lightbox__btn:active { transform: scale(.92); }
+.lightbox__close { top: max(1rem, env(safe-area-inset-top)); right: 1rem; }
+.lightbox__nav   { bottom: max(1rem, env(safe-area-inset-bottom)); font-size: 1.8rem; padding-bottom: .15rem; }
+.lightbox__nav--prev { left: 1rem; }
+.lightbox__nav--next { right: 1rem; }
+
+@media (hover: hover) {
+  .lightbox__btn:hover { background: rgba(255, 255, 255, .26); }
+}
+
+@media (min-width: 48rem) {
+  .lightbox__nav { top: 50%; bottom: auto; translate: 0 -50%; }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(.94) translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+
+/* ==========================================================================
+   11  FAVORITE MOMENTS
+   ========================================================================== */
+.favorites__grid {
+  display: grid;
+  gap: 2.5rem 1.5rem;
+  max-width: 66rem;
+  margin-inline: auto;
+}
+
+.favorite {
+  display: grid;
+  justify-items: center;
+  gap: .9rem;
+  padding: 1.4rem 1.4rem 2rem;
+  text-align: center;
+  border-radius: var(--radius-l);
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+  transition: transform .5s var(--ease-out), box-shadow .5s ease;
+}
+
+.favorite__photo {
+  width: min(80%, 15rem);
+  margin: .6rem 0 .8rem;
+}
+.favorite__photo img { transition: transform .8s var(--ease-out); }
+
+.favorite__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.55rem;
+  line-height: 1.2;
+  color: var(--wine);
+}
+.favorite__text {
+  max-width: 19rem;
+  color: var(--ink-soft);
+}
+
+@media (hover: hover) {
+  .favorite:hover { transform: translateY(-8px); box-shadow: var(--shadow-lift); }
+  .favorite:hover .favorite__photo img { transform: scale(1.07); }
+}
+
+@media (min-width: 52rem) {
+  .favorites__grid { grid-template-columns: repeat(3, 1fr); align-items: start; }
+  .favorites__grid > li:nth-child(2) { margin-top: 3.5rem; }
+}
+
+
+/* ==========================================================================
+   12  REASONS WHY I LOVE YOU  (carousel satu alasan per waktu)
+   ========================================================================== */
+.reason {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 34rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 6vw, 3rem);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, .9);
+  border-radius: var(--radius-l);
+  background: rgba(255, 255, 255, .55);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-soft);
+}
+
+.reason__stage {
+  display: grid;
+  align-content: center;
+  min-height: 13rem;
+  overflow: hidden;
+}
+
+.reason__content {
+  display: grid;
+  justify-items: center;
+  gap: .75rem;
+  transition: opacity .3s ease, transform .3s var(--ease-out);
+}
+.reason__content.is-out { opacity: 0; transform: translateX(calc(var(--dir, 1) * -20px)); }
+.reason__content.is-in  { opacity: 0; transform: translateX(calc(var(--dir, 1) * 20px)); transition: none; }
+
+.reason__number {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(3.5rem, 16vw, 5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--rose);
+}
+.reason__text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 5vw, 1.7rem);
+  line-height: 1.4;
+  color: var(--wine);
+  text-wrap: balance;
+}
+
+.reason__progress {
+  font-size: .9rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+.reason__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .75rem;
+}
+
+
+/* ==========================================================================
+   13  LOVE LETTER  (amplop → surat)
+   ========================================================================== */
+
+.letter { scroll-margin-top: 1.5rem; }
+
+/* Dua blok yang saling bertukar tinggi dengan halus */
+.letter__collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 1s var(--ease-out), opacity .8s ease;
+}
+.letter__collapse-inner { min-height: 0; overflow: hidden; }
+
+.letter__collapse--open { grid-template-rows: 0fr; opacity: 0; }
+.letter.is-reading .letter__collapse--closed { grid-template-rows: 0fr; opacity: 0; }
+.letter.is-reading .letter__collapse--open   { grid-template-rows: 1fr; opacity: 1; }
+
+.letter__collapse--closed .letter__collapse-inner {
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  padding: .75rem 1.75rem 1.75rem;
+}
+
+.letter__intro {
+  display: grid;
+  justify-items: center;
+  gap: .35rem;
+  text-align: center;
+  transition: opacity .45s ease;
+}
+.letter__emoji   { font-size: 2rem; line-height: 1; }
+.letter__heading {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 7vw, 2.4rem);
+  line-height: 1.1;
+  color: var(--wine);
+}
+
+.letter.is-opening .letter__intro  { opacity: 0; }
+.letter.is-opening .letter__button { opacity: 0; pointer-events: none; }
+
+/* --- Amplop CSS --- */
+.envelope {
+  position: relative;
+  width: min(86vw, 17rem);
+  height: 11rem;
+  margin-top: .5rem;
+  perspective: 900px;
+  isolation: isolate;
+  filter: drop-shadow(0 14px 14px rgba(150, 50, 85, .22));
+}
+.envelope__back,
+.envelope__front,
+.envelope__paper,
+.envelope__flap { position: absolute; }
+
+.envelope__back {
+  inset: 0;
+  z-index: 0;
+  border-radius: 6px;
+  background: #e58aa0;
+}
+
+.envelope__paper {
+  left: 8%; right: 8%; top: 10%; bottom: 8%;
+  z-index: 2;
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 .85rem, rgba(212, 96, 123, .16) .85rem calc(.85rem + 1px)) 0 1.1rem / 100% 100% no-repeat,
+    #fffdfa;
+  transition: transform 1s var(--ease-out) .55s;
+}
+.envelope.is-open .envelope__paper { transform: translateY(-42%); }
+
+.envelope__front {
+  inset: 0;
+  z-index: 3;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #f8cdd6, #efb0c0);
+  clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+}
+
+.envelope__flap {
+  left: 0; right: 0; top: 0;
+  height: 54%;
+  z-index: 4;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform .95s var(--ease-out), z-index 0s linear .45s;
+}
+.envelope__flap-face,
+.envelope__flap-back {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.envelope__flap-face { background: linear-gradient(165deg, var(--rose), var(--rose-deep)); }
+.envelope__flap-back { background: linear-gradient(200deg, #fbdde3, #eba6b6); transform: rotateX(180deg); }
+
+.envelope.is-open .envelope__flap { transform: rotateX(180deg); z-index: 1; }
+
+.envelope__seal {
+  position: absolute;
+  left: 50%;
+  top: 54%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 2.8rem;
+  height: 2.8rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, .95);
+  border-radius: 56% 44% 52% 48% / 48% 54% 46% 52%;
+  background: radial-gradient(circle at 32% 28%, #f6a0b4, var(--rose-deep));
+  box-shadow: inset 0 -3px 6px rgba(78, 26, 45, .35), 0 6px 12px -4px rgba(78, 26, 45, .5);
+  translate: -50% -50%;
+  transition: opacity .35s ease, scale .5s ease;
+}
+.envelope.is-open .envelope__seal { opacity: 0; scale: .4; }
+
+/* --- Kertas surat --- */
+.paper {
+  position: relative;
+  padding: clamp(2rem, 8vw, 3.5rem) clamp(1.4rem, 7vw, 3.25rem) clamp(2rem, 7vw, 3rem);
+  border-radius: 10px;
+  background: #fffdfa;
+  box-shadow: var(--shadow-lift), 0 0 0 1px rgba(212, 96, 123, .12);
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.08rem, 4.3vw, 1.28rem);
+  line-height: 1.85;
+  color: var(--ink);
+  cursor: default;
+}
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  border-radius: 10px 10px 0 0;
+  background: linear-gradient(90deg, var(--petal), var(--rose), var(--petal));
+}
+.paper p + p { margin-top: 1.15em; }
+
+.paper__greeting {
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.15em;
+  color: var(--rose-deep);
+}
+.paper__sign {
+  margin-top: .1em !important;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.3em;
+  color: var(--rose-deep);
+}
+
+/* Efek muncul kata demi kata (dibuat oleh JavaScript) */
+.paper .w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(.35em);
+  transition: opacity .8s ease, transform .8s var(--ease-out);
+}
+.letter.is-typing .w {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i) * var(--word-delay, 40ms));
+}
+.letter.is-instant .w {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+
+/* ==========================================================================
+   14  MY WISH FOR YOU  (text reveal bertopeng)
+   ========================================================================== */
+.wishes__list {
+  display: grid;
+  gap: 2.25rem;
+  text-align: center;
+}
+
+.wish { padding-block: .2em; }
+
+.wish__text {
+  display: block;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 5.6vw, 2rem);
+  line-height: 1.35;
+  color: var(--wine);
+  text-wrap: balance;
+}
+.wish__text::before {
+  content: "♥";
+  display: block;
+  margin-bottom: .6rem;
+  font-size: .65rem;
+  font-style: normal;
+  color: var(--rose);
+}
+
+
+/* ==========================================================================
+   15  NIGHT — Cake, Final Surprise, Closing
+   Peralihan dari siang (cream) ke malam (wine) sepanjang halaman.
+   ========================================================================== */
+.night {
+  color: var(--cream);
+  background: linear-gradient(
+    180deg,
+    var(--cream) 0,
+    #d28ca0 4.5rem,
+    var(--wine) 10rem,
+    var(--wine-deep) 100%
+  );
+}
+.night .section__title { color: var(--cream); }
+.night .section__lead  { color: rgba(255, 248, 241, .8); }
+
+/* ---- Kue ---- */
+.cake-section {
+  padding-top: clamp(9rem, 30vw, 12rem);
+  text-align: center;
+}
+
+.cake-stage {
+  position: relative;
+  width: min(100%, 17rem);
+  margin: 1rem auto 2.5rem;
+}
+
+.cake {
+  --sponge: #fff0e2;
+  --icing:  #fbd5de;
+  position: relative;
+  padding-top: 5rem;
+}
+
+.cake__glow {
+  position: absolute;
+  left: 50%;
+  top: -3rem;
+  width: min(24rem, 94vw);
+  height: 14rem;
+  translate: -50% 0;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 196, 120, .42), rgba(255, 196, 120, 0));
+  transition: opacity 1.2s ease;
+  animation: glow 3s ease-in-out infinite alternate;
+}
+.cake.is-blown .cake__glow { opacity: 0; animation: none; }
+
+.cake__candles {
+  position: absolute;
+  top: 1.6rem;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
+  width: 56%;
+  translate: -50% 0;
+}
+
+.candle {
+  position: relative;
+  width: .62rem;
+  height: 3.4rem;
+  border-radius: .2rem;
+  background: repeating-linear-gradient(-45deg, #fff 0 .45rem, var(--petal) .45rem .9rem);
+  box-shadow: inset -.12rem 0 0 rgba(78, 26, 45, .12);
+}
+.candle::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -.35rem;
+  width: 2px;
+  height: .45rem;
+  background: #3a2a2a;
+  translate: -50% 0;
+}
+
+.flame {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .05rem);
+  width: .8rem;
+  height: 1.4rem;
+  margin-left: -.4rem;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: radial-gradient(ellipse at 50% 78%, #fff6c8 0, #ffd36b 40%, #ff9a4d 78%, rgba(255, 120, 60, 0) 100%);
+  filter: drop-shadow(0 0 .45rem rgba(255, 190, 100, .95));
+  transform-origin: 50% 92%;
+  animation: flicker 1.1s ease-in-out infinite alternate;
+  transition: transform .45s ease, opacity .45s ease;
+}
+.candle:nth-child(2) .flame { animation-delay: -.3s; }
+.candle:nth-child(3) .flame { animation-delay: -.6s; }
+.candle:nth-child(4) .flame { animation-delay: -.2s; }
+.candle:nth-child(5) .flame { animation-delay: -.8s; }
+
+.candle.is-out .flame {
+  animation: none;
+  transform: scale(.15) translateY(.8rem);
+  opacity: 0;
+}
+
+.candle__smoke {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + .1rem);
+  width: .55rem;
+  height: .55rem;
+  margin-left: -.275rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+  filter: blur(3px);
+  opacity: 0;
+}
+.candle.is-out .candle__smoke { animation: smoke 2.3s ease-out forwards; }
+
+/* Lapisan kue */
+.cake__layer {
+  position: relative;
+  margin-inline: auto;
+  background: linear-gradient(var(--icing) 0 1.05rem, var(--sponge) 1.05rem);
+  box-shadow: inset 0 -.5rem 0 rgba(212, 96, 123, .1);
+}
+/* Lelehan icing */
+.cake__layer::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  top: 1.05rem;
+  height: 1.3rem;
+  background:
+    radial-gradient(ellipse .5rem .95rem at 1rem 0, var(--icing) 98%, transparent 100%) 0 0 / 2.8rem 100% repeat-x,
+    radial-gradient(ellipse .42rem .6rem at 2.2rem 0, var(--icing) 98%, transparent 100%) 0 0 / 2.8rem 100% repeat-x;
+}
+.cake__layer--top    { width: 58%; height: 3.6rem; border-radius: 1.1rem 1.1rem 0 0; }
+.cake__layer--mid    { width: 80%; height: 4.2rem; }
+.cake__layer--bottom {
+  --icing: #f4aebe;
+  width: 100%;
+  height: 4.8rem;
+  border-radius: 0 0 1.2rem 1.2rem;
+}
+.cake__layer--mid::before,
+.cake__layer--bottom::before {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: .75rem;
+  text-align: center;
+  font-size: .75rem;
+  line-height: 1;
+  letter-spacing: .55rem;
+  color: var(--rose);
+  opacity: .75;
+}
+.cake__layer--mid::before    { content: "• • • • • •"; letter-spacing: .45rem; }
+.cake__layer--bottom::before { content: "♥ ♥ ♥ ♥ ♥ ♥ ♥"; }
+
+.cake__plate {
+  width: 120%;
+  height: 1rem;
+  margin: -.05rem -10% 0;
+  border-radius: 50%;
+  background: linear-gradient(#fff, #f2d4db);
+  box-shadow: 0 16px 30px -6px rgba(0, 0, 0, .5);
+}
+
+.cake__message {
+  min-height: 3.6rem;
+  margin-bottom: 1.25rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.3rem, 5.4vw, 1.85rem);
+  line-height: 1.35;
+  color: var(--cream);
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 1s ease, transform 1s var(--ease-out);
+}
+.cake__message.is-visible { opacity: 1; transform: none; }
+
+@keyframes flicker {
+  0%   { transform: scale(1, 1)       rotate(-2deg); }
+  100% { transform: scale(.92, 1.09)  rotate(2.5deg); }
+}
+@keyframes glow {
+  from { opacity: .75; }
+  to   { opacity: 1; }
+}
+@keyframes smoke {
+  0%   { opacity: 0;  transform: translateY(0) scale(.6); }
+  20%  { opacity: .7; }
+  100% { opacity: 0;  transform: translateY(-3.2rem) translateX(.5rem) scale(2.2); }
+}
+
+/* ---- Final surprise ---- */
+.final {
+  overflow: hidden;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1.1s ease, transform 1.1s var(--ease-out);
+}
+.final.is-shown { opacity: 1; transform: none; }
+
+.final__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.75rem;
+}
+
+.final__title {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  line-height: 1.15;
+  color: var(--cream);
+  text-wrap: balance;
+}
+
+.surprise {
+  display: grid;
+  gap: 1.1rem;
+  width: 100%;
+  margin-top: .5rem;
+  opacity: 0;
+  transform: scale(.94) translateY(16px);
+  transition: opacity 1s ease, transform 1s var(--ease-out);
+}
+.surprise.is-open { opacity: 1; transform: none; }
+
+.surprise__frame {
+  overflow: hidden;
+  border: .5rem solid rgba(255, 248, 241, .94);
+  border-radius: var(--radius-l);
+  background: #000;
+  box-shadow: 0 34px 70px -24px rgba(0, 0, 0, .75);
+}
+.surprise__video {
+  display: none;
+  width: 100%;
+  height: auto;
+  max-height: 78vh;
+  max-height: 78svh;
+  background: #000;
+  object-fit: contain;
+}
+.surprise__photo {
+  aspect-ratio: 4 / 3;
+  border-radius: 0;
+}
+.surprise__frame.has-video .surprise__video { display: block; }
+.surprise__frame.has-video .surprise__photo { display: none; }
+
+.surprise__caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.3rem;
+  color: var(--petal);
+}
+
+/* ---- Closing ---- */
+.closing {
+  padding-bottom: clamp(6rem, 16vw, 9rem);
+  text-align: center;
+  background: radial-gradient(55% 34% at 50% 38%, rgba(212, 96, 123, .2), rgba(212, 96, 123, 0) 100%);
+}
+
+.closing__title {
+  margin-bottom: 2.25rem;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 9.5vw, 3.9rem);
+  line-height: 1.12;
+  letter-spacing: -.015em;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.closing__line {
+  max-width: 28rem;
+  margin: 0 auto .6rem;
+  font-size: 1.15rem;
+  color: rgba(255, 248, 241, .85);
+}
+.closing__forever {
+  margin-top: 2rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 5.5vw, 1.9rem);
+  color: var(--petal);
+}
+.closing__sign {
+  margin: .4rem 0 3rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: var(--cream);
+}
+
+
+/* ==========================================================================
+   16  MUSIC, PROGRESS, CONFETTI
+   ========================================================================== */
+.music {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  border: 1px solid rgba(255, 255, 255, .75);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .62);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 26px -10px rgba(78, 26, 45, .45);
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  scale: .6;
+  pointer-events: none;
+  transition: opacity .8s ease 1.8s, scale .8s var(--ease-out) 1.8s;
+}
+.is-opened .music { opacity: 1; scale: 1; pointer-events: auto; }
+.music:active { scale: .92; transition-delay: 0s; }
+
+.music[data-state="on"]  .music__off { display: none; }
+.music[data-state="off"] .music__on  { display: none; }
+.music[data-state="on"]::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border: 2px solid var(--rose);
+  border-radius: 50%;
+  animation: ring 2.4s ease-out infinite;
+}
+@keyframes ring {
+  from { transform: scale(1);   opacity: .6; }
+  to   { transform: scale(1.5); opacity: 0; }
+}
+
+.progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 70;
+  height: 3px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .8s ease 1.5s;
+}
+.is-opened .progress { opacity: 1; }
+.progress__bar {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--petal), var(--rose));
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+
+/* ==========================================================================
+   17  SCROLL REVEAL  (IntersectionObserver menambahkan .is-visible)
+   Elemen hanya disembunyikan bila JavaScript aktif (class .js).
+   ========================================================================== */
+.js [data-reveal] {
+  opacity: 0;
+  transition:
+    opacity 1s ease var(--d, 0s),
+    transform 1s var(--ease-out) var(--d, 0s);
+}
+.js [data-reveal="up"],
+.js [data-reveal="left"],
+.js [data-reveal="right"] { transform: translateY(1.5rem); }
+.js [data-reveal="zoom"]  { transform: scale(.94); }
+
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Teks bertopeng: teks naik dari balik garis */
+.js [data-reveal="mask"] { opacity: 1; overflow: hidden; transform: none; }
+.js [data-reveal="mask"] > .wish__text {
+  transform: translateY(115%);
+  transition: transform 1.1s var(--ease-out) var(--d, 0s);
+}
+.js [data-reveal="mask"].is-visible > .wish__text { transform: none; }
+
+@media (min-width: 52rem) {
+  .js [data-reveal="left"]  { transform: translateX(-2.5rem); }
+  .js [data-reveal="right"] { transform: translateX(2.5rem); }
+}
+
+
+/* ==========================================================================
+   18  REDUCED MOTION
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  .floater, .sparkle { display: none; }
+}
+
+
+/* ==========================================================================
+   19  MOBILE OPTIMIZATION (RESPONSIVE ENHANCEMENTS)
+   ========================================================================== */
+
+/* Hilangkan delay 300ms saat tap di layar sentuh */
+button,
+.btn,
+.gallery__item,
+.lightbox__btn,
+.music,
+.paper {
+  touch-action: manipulation;
+}
+
+/* Penyesuaian khusus layar ponsel & phablet (<= 640px) */
+@media (max-width: 40rem) {
+  :root {
+    --gutter: 1.15rem;
+  }
+
+  body {
+    font-size: 1rem;
+  }
+
+  .section {
+    padding: clamp(3.5rem, 12vw, 5.5rem) var(--gutter);
+  }
+
+  /* Hero: pastikan nama panjang 4 kata & foto muat rapi di satu layar HP */
+  .hero {
+    padding: max(2.5rem, env(safe-area-inset-top)) var(--gutter) max(4.25rem, calc(env(safe-area-inset-bottom) + 3rem));
+  }
+
+  .hero__inner {
+    gap: .85rem;
+    width: 100%;
+  }
+
+  .hero__photo {
+    width: min(56vw, 14.5rem, 25svh);
+    margin: .35rem 0 .25rem;
+  }
+
+  .hero__name {
+    font-size: clamp(1.5rem, 6.2vw, 2.2rem);
+    line-height: 1.2;
+    max-width: 18ch;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+
+  .hero__date {
+    margin-top: -.25rem;
+    font-size: .95rem;
+  }
+
+  .hero__tagline {
+    font-size: clamp(1.1rem, 4.5vw, 1.35rem);
+  }
+
+  /* Pesan ulang tahun */
+  .message__body {
+    font-size: clamp(1.1rem, 4.3vw, 1.35rem);
+    line-height: 1.75;
+    padding-inline: .25rem;
+  }
+
+  /* Galeri foto di HP */
+  .gallery {
+    column-gap: .5rem;
+  }
+
+  .gallery__item {
+    margin-bottom: .5rem;
+    border-radius: 16px;
+  }
+
+  /* Lightbox modal foto di HP: beri ruang aman untuk tombol X dan navigasi bawah */
+  .lightbox__inner {
+    padding: max(3.75rem, calc(env(safe-area-inset-top) + 3rem)) .75rem max(4.75rem, calc(env(safe-area-inset-bottom) + 4rem));
+  }
+
+  .lightbox__img {
+    max-height: calc(100svh - 12.5rem);
+    border-radius: 16px;
+  }
+
+  .lightbox__caption {
+    font-size: 1rem;
+    padding: .45rem 1rem;
+    max-width: 92vw;
+  }
+
+  /* Kartu Favorite Moments di HP */
+  .favorites__grid {
+    gap: 1.75rem;
+  }
+
+  .favorite {
+    padding: 1.25rem 1.15rem 1.65rem;
+    border-radius: 24px;
+  }
+
+  .favorite__photo {
+    width: min(78%, 13.5rem);
+    margin: .35rem 0 .5rem;
+  }
+
+  /* Carousel Reasons di HP: tombol mudah ditekan jari */
+  .reason {
+    padding: 1.5rem 1.15rem;
+    border-radius: 24px;
+  }
+
+  .reason__stage {
+    min-height: 11.5rem;
+  }
+
+  .reason__controls {
+    width: 100%;
+    gap: .6rem;
+  }
+
+  .reason__controls .btn {
+    flex: 1 1 8.5rem;
+    padding: .75rem 1rem;
+  }
+
+  /* Amplop & Kertas Surat Cinta di HP */
+  .letter__collapse--closed .letter__collapse-inner {
+    padding: .5rem .75rem 1.5rem;
+  }
+
+  .envelope {
+    width: min(82vw, 15.5rem);
+    height: 10rem;
+  }
+
+  .paper {
+    padding: 1.75rem 1.25rem 1.85rem;
+    font-size: 1.05rem;
+    line-height: 1.78;
+    overflow-wrap: break-word;
+  }
+
+  /* Kue Ulang Tahun: cegah piring kue (width: 120%) melewati layar HP */
+  .cake-section {
+    padding-top: clamp(7rem, 24vw, 9.5rem);
+  }
+
+  .cake-stage {
+    width: min(80vw, 15rem);
+    margin: .75rem auto 2rem;
+  }
+
+  /* Video Final Surprise di HP */
+  .surprise__frame {
+    border-width: .35rem;
+    border-radius: 20px;
+  }
+
+  .surprise__video {
+    max-height: 68vh;
+    max-height: 68svh;
+  }
+
+  /* Penutup: beri ruang bawah agar tidak tertutup tombol musik melayang */
+  .closing {
+    padding-bottom: max(5.5rem, calc(env(safe-area-inset-bottom) + 4.5rem));
+  }
+}
+
+/* Penyesuaian khusus layar ponsel mungil (<= 375px, mis. iPhone SE / Android kecil) */
+@media (max-width: 23.5rem) {
+  .opening__title {
+    font-size: 2.6rem;
+  }
+
+  .hero__title {
+    font-size: 2.75rem;
+  }
+
+  .hero__photo {
+    width: min(52vw, 12.5rem, 23svh);
+  }
+
+  .hero__name {
+    font-size: 1.38rem;
+  }
+
+  .btn {
+    padding: .75rem 1.35rem;
+    font-size: .95rem;
+  }
+
+  .cake-stage {
+    width: min(76vw, 13.5rem);
+  }
+}
+
+/* Penyesuaian saat ponsel dimiringkan (Landscape Mobile) */
+@media (max-height: 44rem) and (orientation: landscape) {
+  .js .opening {
+    overflow-y: auto;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-top: 2.5rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero__photo {
+    width: min(32vw, 11rem);
+  }
+
+  .lightbox__inner {
+    padding: 1rem 4.25rem;
+  }
+
+  .lightbox__img {
+    max-height: calc(100svh - 5rem);
+  }
+
+  .lightbox__nav {
+    top: 50%;
+    bottom: auto;
+    translate: 0 -50%;
+  }
+}

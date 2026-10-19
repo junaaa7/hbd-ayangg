@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff8f1">
+  <title>Happy Birthday ❤️</title>
+
+  <!-- Favicon emoji hati (tidak perlu file tambahan) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9D%A4%EF%B8%8F%3C/text%3E%3C/svg%3E">
+
+  <!--
+    Font (opsional, butuh internet). Jika offline, website otomatis
+    memakai font bawaan perangkat (Georgia / system-ui) dan tetap rapi.
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;0,600;1,300;1,400;1,500&family=Nunito+Sans:wght@400;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Satu baris saja: menandai JavaScript aktif sebelum halaman pertama digambar -->
+  <script>document.documentElement.classList.add("js");</script>
+  <script src="js/script.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Garis kemajuan perjalanan di bagian atas layar -->
+  <div class="progress" aria-hidden="true"><span class="progress__bar"></span></div>
+
+  <!-- =====================================================
+       1. OPENING
+       ===================================================== -->
+  <section class="opening" id="opening" aria-label="Pembuka">
+    <div class="floaters" data-floaters="opening" aria-hidden="true"></div>
+
+    <div class="opening__content">
+      <div class="opening__seal" aria-hidden="true">♥</div>
+      <p class="opening__title">Hey, you...</p>
+      <p class="opening__text">I made something special for you.</p>
+      <button type="button" class="btn btn--primary opening__button" id="openSurprise">Open Your Surprise ❤️</button>
+    </div>
+  </section>
+
+  <main id="main">
+
+    <!-- =====================================================
+         2. HERO
+         Ganti foto: assets/images/hero.jpg
+         Nama & tanggal diambil otomatis dari birthdayConfig di js/script.js
+         ===================================================== -->
+    <section class="hero" id="hero" aria-labelledby="hero-title">
+      <div class="floaters" data-floaters="hero" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <h1 class="hero__title hero__item" id="hero-title" style="--d: .3s">
+          <span>Happy</span>
+          <span>Birthday <span class="hero__heart" aria-hidden="true">❤️</span></span>
+        </h1>
+
+        <div class="hero__photo arch hero__item" style="--d: .7s">
+          <div class="photo">
+            <img src="assets/images/hero.jpg" alt="Foto utama" width="800" height="1000">
+          </div>
+        </div>
+
+        <p class="hero__name hero__item" data-bind="name" style="--d: 1.6s">Revianti Sudjana Dwi Wulandari</p>
+        <p class="hero__date hero__item" style="--d: 1.8s"><time data-bind="birthdayLong">22 Oktober 2026</time></p>
+        <p class="hero__tagline hero__item" style="--d: 2.1s">Today is all about you.</p>
+      </div>
+
+      <div class="hero__scroll hero__item" style="--d: 3s" aria-hidden="true"><span></span></div>
+    </section>
+
+    <!-- =====================================================
+         3. BIRTHDAY MESSAGE  (edit teksnya langsung di sini)
+         ===================================================== -->
+    <section class="section message" id="message" aria-labelledby="message-title">
+      <h2 class="sr-only" id="message-title">Pesan ulang tahun</h2>
+      <div class="container container--narrow">
+        <div class="message__body" data-reveal="up">
+          <p class="message__greeting">Dear <span data-bind="name">Revianti Sudjana Dwi Wulandari</span>,</p>
+          <p>Hari ini aku mau berhenti sebentar dari semua kesibukan, hanya untuk bilang satu hal: aku bersyukur kamu lahir ke dunia ini, dan lebih bersyukur lagi karena aku boleh mengenalmu.</p>
+          <p>Terima kasih sudah jadi tempat pulang, teman cerita, dan alasan aku tersenyum tanpa sadar. Semoga setiap detik di hari ini terasa seindah kamu.</p>
+          <p class="message__sign">— <span data-bind="sender">Arjuna Ranma Putra</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         6. MEMORY GALLERY
+         Tiap foto = satu <button>. Ubah caption lewat data-caption.
+         Bentuk foto: gallery__item--square / --landscape / --tall
+         (tanpa class tambahan = potret 3:4)
+         ===================================================== -->
+    <section class="section section--blush gallery-section" id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <header class="section__head" data-reveal="up">
+          <h2 class="section__title" id="gallery-title">Memory Gallery</h2>
+          <p class="section__lead">Ketuk foto untuk melihatnya lebih dekat.</p>
+          <span class="ornament" aria-hidden="true">♥</span>
+        </header>
+
+        <div class="gallery">
+          <button type="button" class="gallery__item" data-reveal="zoom" data-caption="Senyum yang selalu kuingat">
+            <span class="photo"><img src="assets/images/gallery-1.jpg" alt="Kenangan 1" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--square" data-reveal="zoom" data-caption="Jalan-jalan sama pitung di Jogja">
+            <span class="photo"><img src="assets/images/gallery-2.jpg" alt="Kenangan 2" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--tall" data-reveal="zoom" data-caption="Ngapain melet-meelet">
+            <span class="photo"><img src="assets/images/gallery-3.jpg" alt="Kenangan 3" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--landscape" data-reveal="zoom" data-caption="Moment lebaran dikampung">
+            <span class="photo"><img src="assets/images/gallery-4.jpg" alt="Kenangan 4" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item" data-reveal="zoom" data-caption="Candid favoritku">
+            <span class="photo"><img src="assets/images/gallery-5.jpg" alt="Kenangan 5" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--square" data-reveal="zoom" data-caption="Petualangan kecil kita">
+            <span class="photo"><img src="assets/images/gallery-6.jpg" alt="Kenangan 6" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--landscape" data-reveal="zoom" data-caption="Hari yang sederhana, tapi hangat">
+            <span class="photo"><img src="assets/images/gallery-7.jpg" alt="Kenangan 7" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item gallery__item--tall" data-reveal="zoom" data-caption="Kamu dan tawa itu">
+            <span class="photo"><img src="assets/images/gallery-8.jpg" alt="Kenangan 8" loading="lazy" decoding="async"></span>
+          </button>
+          <button type="button" class="gallery__item" data-reveal="zoom" data-caption="Satu lagi kenangan manis">
+            <span class="photo"><img src="assets/images/gallery-9.jpg" alt="Kenangan 9" loading="lazy" decoding="async"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         7. FAVORITE MOMENTS
+         Foto: moment-date.jpg, moment-funny.jpg, moment-precious.jpg
+         ===================================================== -->
+    <section class="section favorites" id="favorites" aria-labelledby="favorites-title">
+      <div class="container">
+        <header class="section__head" data-reveal="up">
+          <h2 class="section__title" id="favorites-title">Favorite Moments</h2>
+          <p class="section__lead">Tiga hal yang paling sering kuputar ulang di kepalaku.</p>
+          <span class="ornament" aria-hidden="true">♥</span>
+        </header>
+
+        <ul class="favorites__grid">
+          <li data-reveal="up">
+            <article class="favorite">
+              <div class="favorite__photo arch"><div class="photo"><img src="assets/images/moment-date.jpg" alt="Kencan favorit" loading="lazy" decoding="async"></div></div>
+              <h3 class="favorite__title">Favorite Date</h3>
+              <p class="favorite__text">Piknik sore dengan makanan seadanya, obrolan tanpa jeda, dan langit yang berubah warna pelan-pelan.</p>
+            </article>
+          </li>
+          <li data-reveal="up" style="--d: .12s">
+            <article class="favorite">
+              <div class="favorite__photo arch"><div class="photo"><img src="assets/images/moment-funny.jpg" alt="Momen paling lucu" loading="lazy" decoding="async"></div></div>
+              <h3 class="favorite__title">Funniest Moment</h3>
+              <p class="favorite__text">Saat kita tertawa sampai perut sakit, dan tidak ada satu pun dari kita yang ingat apa lucunya.</p>
+            </article>
+          </li>
+          <li data-reveal="up" style="--d: .24s">
+            <article class="favorite">
+              <div class="favorite__photo arch"><div class="photo"><img src="assets/images/moment-precious.jpg" alt="Momen paling berharga" loading="lazy" decoding="async"></div></div>
+              <h3 class="favorite__title">Most Precious Moment</h3>
+              <p class="favorite__text">Waktu kamu menggenggam tanganku tanpa berkata apa-apa, dan aku tahu: aku sudah pulang.</p>
+            </article>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         8. REASONS WHY I LOVE YOU
+         Daftar alasan ada di <ol id="reasonsList"> di bawah.
+         Tambah / ubah / hapus <li> sesuka hati (minimal 10).
+         ===================================================== -->
+    <section class="section section--blush reasons" id="reasons" aria-labelledby="reasons-title">
+      <div class="container">
+        <header class="section__head" data-reveal="up">
+          <h2 class="section__title" id="reasons-title">Reasons Why I Love You</h2>
+          <p class="section__lead">Satu per satu. Dan daftarnya tidak pernah benar-benar habis.</p>
+          <span class="ornament" aria-hidden="true">♥</span>
+        </header>
+
+        <div class="reason" id="reason" data-reveal="up" style="--d: .1s">
+          <div class="reason__stage" aria-live="polite">
+            <div class="reason__content" id="reasonContent">
+              <span class="reason__number" id="reasonNumber">01</span>
+              <p class="reason__text" id="reasonText">Because you always know how to make me smile.</p>
+            </div>
+          </div>
+          <p class="reason__progress" id="reasonProgress">1 / 12</p>
+          <div class="reason__controls">
+            <button type="button" class="btn btn--ghost" id="reasonPrev" aria-label="Previous reason">← Back</button>
+            <button type="button" class="btn btn--primary" id="reasonNext">Next Reason →</button>
+          </div>
+        </div>
+
+        <!-- Sumber data carousel (disembunyikan, dibaca oleh JavaScript) -->
+        <ol id="reasonsList" hidden>
+          <li>Because you always know how to make me smile.</li>
+          <li>Because your laugh is my favorite sound in the whole world.</li>
+          <li>Because you really listen when I talk about my day.</li>
+          <li>Because you turn ordinary days into small adventures.</li>
+          <li>Because you are kind to people who can never repay you.</li>
+          <li>Because even on my worst days, you make me feel understood.</li>
+          <li>Because you believe in my dreams, even when I forget to.</li>
+          <li>Because home feels like wherever you are.</li>
+          <li>Because you are stronger than you think, and softer than you let on.</li>
+          <li>Because the little things you do mean the most to me.</li>
+          <li>Because you make me want to be a better person.</li>
+          <li>Because it's you. It has always been you.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         9. LOVE LETTER
+         Isi surat ada di <article class="paper"> di bawah.
+         Setiap <p> otomatis muncul kata demi kata saat surat dibuka.
+         ===================================================== -->
+    <section class="section letter-section" id="letter-section" aria-labelledby="letter-title">
+      <div class="container container--narrow">
+        <div class="letter" id="letter" data-reveal="up">
+
+          <!-- Tampilan awal: amplop tertutup -->
+          <div class="letter__collapse letter__collapse--closed">
+            <div class="letter__collapse-inner">
+              <div class="letter__intro">
+                <span class="letter__emoji" aria-hidden="true">💌</span>
+                <h2 class="letter__heading" id="letter-title">A letter for you</h2>
+              </div>
+
+              <div class="envelope" id="envelope" aria-hidden="true">
+                <div class="envelope__back"></div>
+                <div class="envelope__paper"></div>
+                <div class="envelope__front"></div>
+                <div class="envelope__flap">
+                  <div class="envelope__flap-face"></div>
+                  <div class="envelope__flap-back"></div>
+                </div>
+                <div class="envelope__seal">♥</div>
+              </div>
+
+              <button type="button" class="btn btn--primary letter__button" id="openLetter">Open Letter</button>
+            </div>
+          </div>
+
+          <!-- Surat terbuka -->
+          <div class="letter__collapse letter__collapse--open">
+            <div class="letter__collapse-inner">
+              <article class="paper" id="paper" aria-label="Surat cinta">
+                <div id="letterBody">
+                  <p class="paper__greeting">Dear <span data-bind="name">Revianti Sudjana Dwi Wulandari</span>,</p>
+                  <p>Aku tidak yakin harus mulai dari mana, karena terlalu banyak hal yang ingin kubilang. Jadi kumulai dari yang paling sederhana: terima kasih.</p>
+                  <p>Terima kasih sudah sabar menghadapiku di hari-hari yang tidak mudah. Terima kasih sudah tertawa di lelucon yang bahkan tidak lucu. Terima kasih sudah memilih untuk tinggal, berkali-kali, bahkan saat aku sendiri belum tentu pantas dipilih.</p>
+                  <p>Sejak bersamamu, hal-hal kecil jadi punya arti: pesan singkat di pagi hari, makan malam yang biasa saja, atau cuma duduk berdampingan tanpa bicara. Semua itu perlahan jadi bagian favoritku dari hidup.</p>
+                  <p>Di ulang tahunmu ini, aku tidak meminta apa pun selain satu hal: semoga kamu tahu betapa berharganya dirimu, untukku dan untuk semua orang yang menyayangimu.</p>
+                  <p>Aku sayang kamu. Hari ini, besok, dan seterusnya.</p>
+                  <p>Dengan seluruh cintaku,</p>
+                  <p class="paper__sign" data-bind="sender">Arjuna Ranma Putra</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         10. MY WISH FOR YOU  (edit / tambah <li> sesuka hati)
+         ===================================================== -->
+    <section class="section section--blush wishes" id="wishes" aria-labelledby="wishes-title">
+      <div class="container container--narrow">
+        <header class="section__head" data-reveal="up">
+          <h2 class="section__title" id="wishes-title">My Wish For You</h2>
+          <span class="ornament" aria-hidden="true">♥</span>
+        </header>
+
+        <ul class="wishes__list">
+          <li class="wish" data-reveal="mask"><span class="wish__text">Semoga kamu selalu bahagia.</span></li>
+          <li class="wish" data-reveal="mask" style="--d: .1s"><span class="wish__text">Semoga semua impianmu menjadi kenyataan.</span></li>
+          <li class="wish" data-reveal="mask" style="--d: .1s"><span class="wish__text">Semoga kamu selalu sehat.</span></li>
+          <li class="wish" data-reveal="mask" style="--d: .1s"><span class="wish__text">Semoga hari-harimu dipenuhi hal kecil yang membuatmu tersenyum.</span></li>
+          <li class="wish" data-reveal="mask" style="--d: .1s"><span class="wish__text">Semoga kamu selalu tahu betapa berharganya dirimu.</span></li>
+          <li class="wish" data-reveal="mask" style="--d: .1s"><span class="wish__text">Semoga aku masih bisa menemani banyak ulang tahunmu.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         Bagian "malam": kue, kejutan terakhir, dan penutup
+         ===================================================== -->
+    <div class="night">
+
+      <!-- 11. INTERACTIVE BIRTHDAY CAKE -->
+      <section class="section cake-section" id="cake-section" aria-labelledby="cake-title">
+        <div class="container container--narrow">
+          <header class="section__head" data-reveal="up">
+            <h2 class="section__title" id="cake-title">Make a Wish ✨</h2>
+            <p class="section__lead">Pejamkan mata sebentar, lalu pikirkan satu hal yang paling kamu inginkan.</p>
+          </header>
+
+          <div class="cake-stage" data-reveal="zoom">
+            <div class="cake" id="cake" role="img" aria-label="Kue ulang tahun dengan lima lilin">
+              <div class="cake__glow"></div>
+              <div class="cake__candles">
+                <span class="candle"><span class="flame"></span><span class="candle__smoke"></span></span>
+                <span class="candle"><span class="flame"></span><span class="candle__smoke"></span></span>
+                <span class="candle"><span class="flame"></span><span class="candle__smoke"></span></span>
+                <span class="candle"><span class="flame"></span><span class="candle__smoke"></span></span>
+                <span class="candle"><span class="flame"></span><span class="candle__smoke"></span></span>
+              </div>
+              <div class="cake__layer cake__layer--top"></div>
+              <div class="cake__layer cake__layer--mid"></div>
+              <div class="cake__layer cake__layer--bottom"></div>
+              <div class="cake__plate"></div>
+            </div>
+          </div>
+
+          <p class="cake__message" id="wishMessage" aria-live="polite" aria-hidden="true">Make a wish... I hope it comes true. ❤️</p>
+
+          <div class="cake__actions" data-reveal="up">
+            <button type="button" class="btn btn--primary" id="blowCandles">Blow the Candles</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12. FINAL SURPRISE (tersembunyi sampai lilin ditiup)
+           Video : assets/video/surprise.mp4
+           Foto  : assets/images/surprise.jpg (dipakai bila video belum ada) -->
+      <section class="section final" id="final" aria-labelledby="final-title" hidden>
+        <div class="floaters" id="finalFloaters" aria-hidden="true"></div>
+
+        <div class="container container--narrow final__inner">
+          <h2 class="final__title" id="final-title">Wait... there's one more thing.</h2>
+          <button type="button" class="btn btn--primary" id="openFinal">Open Your Final Surprise 🎁</button>
+
+          <div class="surprise" id="surprise" hidden>
+            <div class="surprise__frame" id="surpriseMedia">
+              <video class="surprise__video" id="surpriseVideo" controls playsinline preload="metadata">
+                <source src="assets/video/surprise.mp4" type="video/mp4">
+              </video>
+              <div class="photo surprise__photo">
+                <img src="assets/images/surprise.jpg" alt="Kejutan terakhir" loading="lazy" decoding="async">
+              </div>
+            </div>
+            <p class="surprise__caption">This one is just for you.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13. CLOSING -->
+      <section class="section closing" id="closing" aria-labelledby="closing-title">
+        <div class="container container--narrow">
+          <h2 class="closing__title" id="closing-title" data-reveal="up">Happy Birthday, My Favorite Person ❤️</h2>
+          <p class="closing__line" data-reveal="up" style="--d: .15s">Thank you for being part of my story.</p>
+          <p class="closing__line" data-reveal="up" style="--d: .3s">I hope we get to create many more memories together.</p>
+          <p class="closing__forever" data-reveal="up" style="--d: .5s">Forever grateful for you.</p>
+          <p class="closing__sign" data-reveal="up" style="--d: .65s">— <span data-bind="sender">Arjuna Ranma Putra</span></p>
+          <button type="button" class="btn btn--ghost-light" id="replay" data-reveal="up" style="--d: .8s">Back to the beginning</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Kontrol musik melayang -->
+  <button type="button" class="music" id="musicToggle" data-state="off" aria-pressed="false" aria-label="Play music">
+    <span class="music__on" aria-hidden="true">🎵</span>
+    <span class="music__off" aria-hidden="true">🔇</span>
+  </button>
+
+  <!-- Canvas confetti -->
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- Modal foto (galeri) -->
+  <dialog class="lightbox" id="lightbox" aria-label="Penampil foto">
+    <div class="lightbox__inner" id="lightboxInner">
+      <button type="button" class="lightbox__btn lightbox__close" id="lightboxClose" aria-label="Close photo">✕</button>
+      <button type="button" class="lightbox__btn lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Previous photo">‹</button>
+
+      <figure class="lightbox__figure">
+        <img class="lightbox__img" id="lightboxImg" alt="">
+        <div class="lightbox__placeholder" id="lightboxPlaceholder" hidden><span>♥</span><small id="lightboxPhName"></small></div>
+        <figcaption class="lightbox__caption"><span id="lightboxCaption"></span></figcaption>
+        <p class="lightbox__count" id="lightboxCount"></p>
+      </figure>
+
+      <button type="button" class="lightbox__btn lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Next photo">›</button>
+    </div>
+  </dialog>
+
+  <!-- Musik latar: tidak autoplay, baru diputar saat tombol "Open Your Surprise" ditekan -->
+  <audio id="bgMusic" src="assets/music/Jamrud - Selamat Ulang Tahun.mp3" loop preload="none"></audio>
+
+</body>
+</html>
